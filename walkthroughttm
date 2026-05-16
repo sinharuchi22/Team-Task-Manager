@@ -1,0 +1,141 @@
+# Team Task Manager — Walkthrough
+
+## Demo Recording
+
+The full demo recording (~4.5 min) walks through: registration → dashboard → project creation → task management (kanban) → team page → populated dashboard → sign out.
+
+![Full demo: register, create project, manage tasks on kanban board, team management, dashboard overview](C:/Users/Tanishq/.gemini/antigravity/brain/daec15af-881e-4df3-8467-3925ee2f298b/demo_recording.webp)
+
+---
+
+## Design System — Monochrome Editorial
+
+The entire frontend follows a strict minimalist monochrome aesthetic inspired by fashion magazines and architecture books.
+
+| Token | Value |
+|:---|:---|
+| **Palette** | Pure black `#000` & white `#FFF` only |
+| **Display Font** | Playfair Display — oversized editorial headlines |
+| **Body Font** | Source Serif 4 — refined reading text |
+| **Border Radius** | 0px everywhere — sharp, architectural |
+| **Shadows** | None — hierarchy via borders and whitespace |
+| **Hover Effect** | Black ↔ white inversion (60ms) |
+| **Badges** | Monochrome: solid border = default, dashed = in progress, inverted = high/admin/done |
+
+---
+
+## Pages
+
+### Login
+Oversized serif "Welcome Back" headline, thick 3px card border, black "Sign In" button that inverts on hover, italic subtitle, underlined auth links.
+
+![Login page with serif typography and monochrome card](C:/Users/Tanishq/.gemini/antigravity/brain/daec15af-881e-4df3-8467-3925ee2f298b/ss_login.png)
+
+---
+
+### Projects
+Grid of project cards with serif titles, role badges (inverted for admin), italic description text, uppercase member/task counts separated by a thin border.
+
+![Projects listing with editorial cards](C:/Users/Tanishq/.gemini/antigravity/brain/daec15af-881e-4df3-8467-3925ee2f298b/ss_projects_list.png)
+
+---
+
+### Kanban Board (Project Detail)
+Three-column kanban with shared borders, uppercase serif column headers, oversized count numbers. Task cards feature serif titles and invert to black on hover. Quick status buttons use uppercase labels.
+
+![Kanban board with tasks across To Do, In Progress, and Done columns](C:/Users/Tanishq/.gemini/antigravity/brain/daec15af-881e-4df3-8467-3925ee2f298b/ss_kanban.png)
+
+---
+
+### Team Management
+Clean table with square black avatars, uppercase headers, inverted admin badge, role dropdown and remove actions for admins.
+
+![Team page showing member table with role management](C:/Users/Tanishq/.gemini/antigravity/brain/daec15af-881e-4df3-8467-3925ee2f298b/ss_team.png)
+
+---
+
+### Dashboard (Populated)
+Oversized Playfair Display stat numbers (3.5rem) that invert on hover. Monochrome progress bars (3px black). Overdue section uses full inverted (black bg) treatment. Projects overview table with progress indicators.
+
+![Dashboard with populated stats, task breakdown, and project overview](C:/Users/Tanishq/.gemini/antigravity/brain/daec15af-881e-4df3-8467-3925ee2f298b/ss_dashboard_populated.png)
+
+---
+
+### New Project Modal
+Clean modal with 3px border, serif title, sharp inputs, black "Create" button. White overlay (92% opacity) instead of dark backdrop.
+
+![New project modal with editorial styling](C:/Users/Tanishq/.gemini/antigravity/brain/daec15af-881e-4df3-8467-3925ee2f298b/ss_new_project_modal.png)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|:---|:---|
+| Backend | Python 3, Flask, Flask-SQLAlchemy, Flask-JWT-Extended, Flask-Bcrypt |
+| Database | SQLite |
+| Frontend | React 18, Vite, React Router v6, Axios |
+| Auth | JWT (24h expiry) |
+| Styling | Vanilla CSS — centralized design tokens |
+
+---
+
+## Project Structure
+
+```
+ttm/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py          # App factory
+│   │   ├── config.py            # Config
+│   │   ├── models.py            # User, Project, ProjectMember, Task
+│   │   ├── auth/routes.py       # /api/auth/*
+│   │   ├── projects/routes.py   # /api/projects/*
+│   │   ├── teams/routes.py      # /api/projects/:id/members/*
+│   │   ├── tasks/routes.py      # /api/projects/:id/tasks/*
+│   │   └── dashboard/routes.py  # /api/dashboard/
+│   ├── requirements.txt
+│   └── run.py
+│
+├── frontend/
+│   ├── src/
+│   │   ├── api/axios.js         # HTTP client with JWT interceptors
+│   │   ├── context/AuthContext.jsx
+│   │   ├── components/          # Navbar, Sidebar, Modal, ProtectedRoute
+│   │   ├── pages/               # Login, Register, Dashboard, Projects,
+│   │   │                          ProjectDetail (kanban), Team
+│   │   ├── App.jsx              # Router + layout
+│   │   ├── main.jsx
+│   │   └── index.css            # Centralized design tokens
+│   ├── vite.config.js
+│   └── package.json
+```
+
+---
+
+## Features
+
+- **Auth** — Register/Login with JWT, bcrypt hashing, session persistence
+- **Projects** — CRUD with role-based access (Admin/Member)
+- **Tasks** — Kanban board, priority, due dates, assignment, overdue detection
+- **Team** — Add members by email, change roles, remove (with safety check)
+- **Dashboard** — Aggregate stats, personal task summary, overdue alerts, project progress
+- **RBAC** — Admin: full CRUD | Member: status updates on assigned tasks only
+- **Accessibility** — `aria-labels`, `htmlFor`, `focus-visible` outlines, keyboard navigation
+- **Responsive** — Mobile-first breakpoints at 768px and 1024px
+
+---
+
+## How to Run
+
+```bash
+# Backend (terminal 1)
+cd backend
+pip install -r requirements.txt
+python run.py          # → http://localhost:5000
+
+# Frontend (terminal 2)
+cd frontend
+npm install
+npm run dev            # → http://localhost:5173
+```
